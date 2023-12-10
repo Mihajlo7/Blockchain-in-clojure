@@ -1,5 +1,6 @@
 (ns blockchain-clojure.core
-  (:import (java.time LocalDateTime)))
+  (:import (java.time LocalDateTime))
+  (:require [blockchain-clojure.hash :as hash] ))
 ;)
 ; Defined chain  )
 (def chain (atom []))
@@ -44,4 +45,5 @@
 
 (defn hash-block [block]
   "Function return hash data for block"
-  (let [block-data (str (get-in block [:index :timestamp :nonce :previousHash]))]))
+  (let [block-data (str (get-in block [:index :timestamp :nonce :previousHash]))]
+    (hash/sha-256 block-data)))
