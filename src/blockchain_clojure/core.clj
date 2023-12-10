@@ -43,7 +43,21 @@
 
 ;(defn sha-256 [input])
 
-(defn hash-block [block]
-  "Function return hash data for block"
-  (let [block-data (str (get-in block [:index :timestamp :nonce :previousHash]))]
+;(defn hash-block [block]
+;  "Function return hash data for block"
+;  (let [block-data (str (get-in block [:index :timestamp :nonce :previousHash]))]
+;    (hash/sha-256 block-data)))
+(defn hash-block [index timestamp data previousHash nonce]
+
+  (let [block-data (str index timestamp data previousHash nonce)]
     (hash/sha-256 block-data)))
+(defn valid-pow [hash]
+  (= (subs hash 1 5) "0000"))
+(defn proof-of-work [index timestamp data previousHash]
+  "Validating proof of work"
+  (loop [nonce 0]
+    (let [hash (hash-block index timestamp data previousHash nonce)]
+      (if (valid-pow hash)
+        nonce
+        (recur (inc nonce)))))
+  )
